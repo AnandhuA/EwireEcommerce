@@ -1,3 +1,5 @@
+import 'package:ewire_ecommerce/core/themes/app_colors.dart';
+import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class AppAlertDialog {
@@ -22,10 +24,14 @@ class AppAlertDialog {
               child: Text(cancelText),
             ),
             FilledButton(
+              style: FilledButton.styleFrom(backgroundColor: context.primary),
               onPressed: () {
                 Navigator.pop(context, true);
               },
-              child: Text(confirmText),
+              child: Text(
+                confirmText,
+                style: TextStyle(color: AppColors.whiteText),
+              ),
             ),
           ],
         );

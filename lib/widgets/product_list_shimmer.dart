@@ -1,3 +1,4 @@
+import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -22,14 +23,22 @@ class ProductListShimmer extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
-
+            SizedBox(height: context.res.hsm),
+            Container(
+              height: context.res.h(0.2),
+              width: context.res.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            SizedBox(height: context.res.hsm),
             Align(
               alignment: Alignment.centerLeft,
               child: Container(height: 20, width: 150, color: Colors.white),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: context.res.hsm),
 
             GridView.builder(
               shrinkWrap: true,
@@ -39,7 +48,7 @@ class ProductListShimmer extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 0.68,
+                childAspectRatio: 0.7,
               ),
               itemBuilder: (_, _) {
                 return Container(

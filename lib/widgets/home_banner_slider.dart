@@ -18,8 +18,6 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
     AppAssets.bannerImage1,
     AppAssets.bannerImage2,
     AppAssets.bannerImage3,
-    AppAssets.bannerImage4,
-    AppAssets.bannerImage5,
   ];
 
   @override

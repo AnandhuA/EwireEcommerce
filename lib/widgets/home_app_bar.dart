@@ -25,13 +25,22 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Consumer<ThemeProvider>(
           builder: (context, themeProvider, _) {
+            final isDark = themeProvider.isDarkMode(context);
+
             return IconButton(
               onPressed: () {
-                themeProvider.toggleTheme();
+                themeProvider.toggleTheme(context);
               },
-              icon: Icon(
-                themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                color: context.primary,
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (child, animation) {
+                  return RotationTransition(turns: animation, child: child);
+                },
+                child: Icon(
+                  isDark ? Icons.light_mode : Icons.dark_mode,
+                  key: ValueKey(isDark),
+                  color: context.primary,
+                ),
               ),
             );
           },

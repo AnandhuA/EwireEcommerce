@@ -36,7 +36,7 @@ class CartPage extends StatelessWidget {
                 await context.read<CartProvider>().clearCart();
               }
             },
-            child: const Text('Clear All'),
+            child: Text('Clear All', style: TextStyle(color: context.primary)),
           ),
         ],
       ),

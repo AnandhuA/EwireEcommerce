@@ -5,13 +5,20 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeMode get themeMode => _themeMode;
 
-  bool get isDarkMode => _themeMode == ThemeMode.dark;
+  bool isDarkMode(BuildContext context) {
+    if (_themeMode == ThemeMode.system) {
+      return MediaQuery.platformBrightnessOf(context) ==
+          Brightness.dark;
+    }
 
-  void toggleTheme() {
+    return _themeMode == ThemeMode.dark;
+  }
+
+  void toggleTheme(BuildContext context) {
+    final isDark = isDarkMode(context);
+
     _themeMode =
-        _themeMode == ThemeMode.dark
-            ? ThemeMode.light
-            : ThemeMode.dark;
+        isDark ? ThemeMode.light : ThemeMode.dark;
 
     notifyListeners();
   }

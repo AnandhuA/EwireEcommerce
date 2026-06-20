@@ -36,12 +36,19 @@ class MyApp extends StatelessWidget {
 
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: context.watch<ThemeProvider>().themeMode,
-            home: ProductListPage(),
+          return AnimatedTheme(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            data: themeProvider.themeMode == ThemeMode.dark
+                ? AppTheme.darkTheme
+                : AppTheme.lightTheme,
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: context.watch<ThemeProvider>().themeMode,
+              home: ProductListPage(),
+            ),
           );
         },
       ),
