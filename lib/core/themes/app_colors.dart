@@ -20,4 +20,6 @@ class AppColors {
   static const Color commanHitText = Colors.grey;
   static const Color success = Colors.green;
   static const Color error = Colors.red;
+
+  static const Color ratingStar = Colors.amberAccent;
 }
