@@ -22,8 +22,12 @@ class ProductGrid extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: products.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: context.res.responsive(
+          mobile: 2,
+          tablet: 3,
+          desktop: 4,
+        ),
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
         childAspectRatio: .8,

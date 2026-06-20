@@ -37,7 +37,10 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
             );
           },
           options: CarouselOptions(
-            height: context.res.h(0.2),
+            height: context.res.responsive(
+              mobile: context.res.h(0.2),
+              tablet: context.res.h(0.4),
+            ),
             viewportFraction: 1,
             autoPlay: true,
             enlargeFactor: 0.4,
