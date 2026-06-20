@@ -13,53 +13,55 @@ class ProductListShimmer extends StatelessWidget {
       highlightColor: context.shimmerHighlight,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-            ),
 
-            SizedBox(height: context.res.hsm),
-            Container(
-              height: context.res.h(0.2),
-              width: context.res.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+              SizedBox(height: context.res.hsm),
+              Container(
+                height: context.res.h(0.2),
+                width: context.res.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-            ),
-            SizedBox(height: context.res.hsm),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(height: 20, width: 150, color: Colors.white),
-            ),
-
-            SizedBox(height: context.res.hsm),
-
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 6,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.7,
+              SizedBox(height: context.res.hsm),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(height: 20, width: 150, color: Colors.white),
               ),
-              itemBuilder: (_, _) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                );
-              },
-            ),
-          ],
+
+              SizedBox(height: context.res.hsm),
+
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.7,
+                ),
+                itemBuilder: (_, _) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

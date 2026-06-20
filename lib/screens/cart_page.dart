@@ -42,8 +42,54 @@ class CartPage extends StatelessWidget {
       ),
       body: Consumer<CartProvider>(
         builder: (context, cart, child) {
+          //========EMPTY SCREEN =========
           if (cart.cartItems.isEmpty) {
-            return const Center(child: Text('Cart is Empty'));
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      size: 80,
+                      color: context.primary,
+                    ),
+
+                    SizedBox(height: context.res.hsm),
+
+                    const Text(
+                      'Your Cart is Empty',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    SizedBox(height: context.res.hxs),
+
+                    Text(
+                      'Looks like you haven\'t added anything yet.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: context.hitText),
+                    ),
+
+                    SizedBox(height: context.res.hsm),
+
+                    SizedBox(
+                      width: 220,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.shopping_bag_outlined),
+                        label: const Text('Continue Shopping'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           return SingleChildScrollView(

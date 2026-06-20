@@ -8,10 +8,6 @@ extension ThemeColors on BuildContext {
   Color get primary =>
       isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary;
 
-  // SECONDARY
-  Color get secondary =>
-      isDarkMode ? AppColors.darkSecondry : AppColors.lightSecondry;
-
   // BACKGROUND
   Color get background =>
       isDarkMode ? AppColors.darkBackground : AppColors.lightBackground;

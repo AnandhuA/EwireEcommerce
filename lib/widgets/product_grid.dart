@@ -6,6 +6,7 @@ import 'package:ewire_ecommerce/providers/cart_provider.dart';
 import 'package:ewire_ecommerce/screens/cart_page.dart';
 import 'package:ewire_ecommerce/screens/product_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../data/models/product_model.dart';
@@ -74,8 +75,14 @@ class _ProductCard extends StatelessWidget {
                       imageUrl: product.thumbnail,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
+                      placeholder: (context, url) => Center(
+                        child: SpinKitThreeBounce(
+                          color: context.isDarkMode
+                              ? Colors.white
+                              : Colors.black,
+                          size: 10,
+                        ),
+                      ),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.image_not_supported),
                     ),
