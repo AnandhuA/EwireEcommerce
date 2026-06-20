@@ -1,6 +1,8 @@
 import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:ewire_ecommerce/providers/product_provider.dart';
+import 'package:ewire_ecommerce/widgets/app_error_widget.dart';
+import 'package:ewire_ecommerce/widgets/product_list_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,44 +41,58 @@ class _ProductListPageState extends State<ProductListPage> {
       appBar: const HomeAppBar(),
       body: Consumer<ProductProvider>(
         builder: (context, provider, child) {
+          //=======LOADING ==========
           if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const ProductListShimmer();
           }
 
+          ///======= ERROR ===========
           if (provider.errorMessage != null) {
-            return Center(child: Text(provider.errorMessage!));
+            return AppErrorWidget(
+              message: provider.errorMessage!,
+              onRetry: () {
+                context.read<ProductProvider>().fetchProducts();
+              },
+            );
           }
 
-          return SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SearchBarWidget(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      context.read<ProductProvider>().searchProducts(value);
-                    },
-                    onClear: () {
-                      context.read<ProductProvider>().clearSearch();
-                    },
-                  ),
-
-                  SizedBox(height: context.res.hsm),
-
-                  Text(
-                    'Featured Products',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+          return RefreshIndicator(
+            onRefresh: () async {
+              _searchController.clear();
+              context.read<ProductProvider>().clearSearch();
+              await context.read<ProductProvider>().fetchProducts();
+            },
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SearchBarWidget(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        context.read<ProductProvider>().searchProducts(value);
+                      },
+                      onClear: () {
+                        context.read<ProductProvider>().clearSearch();
+                      },
                     ),
-                  ),
 
-                  SizedBox(height: context.res.hsm),
+                    SizedBox(height: context.res.hsm),
 
-                  ProductGrid(products: provider.filteredProducts),
-                ],
+                    Text(
+                      'Featured Products',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    SizedBox(height: context.res.hsm),
+
+                    ProductGrid(products: provider.filteredProducts),
+                  ],
+                ),
               ),
             ),
           );

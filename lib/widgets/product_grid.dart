@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ewire_ecommerce/core/themes/app_colors.dart';
+import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:ewire_ecommerce/screens/product_detail_page.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class ProductGrid extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: .68,
+        childAspectRatio: .8,
       ),
       itemBuilder: (context, index) {
         return _ProductCard(
@@ -50,6 +52,7 @@ class _ProductCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Card(
+        color: context.card,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
@@ -80,7 +83,7 @@ class _ProductCard extends StatelessWidget {
 
               Text(
                 product.title,
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 14,
@@ -92,7 +95,7 @@ class _ProductCard extends StatelessWidget {
 
               Row(
                 children: [
-                  const Icon(Icons.star, size: 16, color: Colors.amber),
+                  Icon(Icons.star, size: 16, color: AppColors.ratingStar),
                   const SizedBox(width: 4),
                   Text(
                     product.rating.toStringAsFixed(1),

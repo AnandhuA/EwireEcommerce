@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ewire_ecommerce/core/responsive/responsive.dart';
-import 'package:ewire_ecommerce/core/themes/app_colors.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:ewire_ecommerce/data/models/product_model.dart';
 import 'package:ewire_ecommerce/providers/cart_provider.dart';
+import 'package:ewire_ecommerce/screens/cart_page.dart';
+import 'package:ewire_ecommerce/widgets/rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class ProductDetailPage extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 320,
             pinned: true,
+            backgroundColor: context.card,
             flexibleSpace: FlexibleSpaceBar(
               background: Hero(
                 tag: 'product_${product.id}',
@@ -49,14 +51,22 @@ class ProductDetailPage extends StatelessWidget {
 
                   SizedBox(height: context.res.hsm),
 
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: AppColors.ratingStar),
-                      const SizedBox(width: 4),
-                      Text(product.rating.toStringAsFixed(1)),
-                    ],
-                  ),
+               Row(
+  children: [
+    RatingStars(
+      rating: product.rating,
+    ),
 
+    const SizedBox(width: 8),
+
+    Text(
+      product.rating.toStringAsFixed(1),
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  ],
+),
                   SizedBox(height: context.res.hsm),
 
                   Text(
@@ -90,45 +100,21 @@ class ProductDetailPage extends StatelessWidget {
       bottomNavigationBar: Consumer<CartProvider>(
         builder: (context, cart, _) {
           final isInCart = cart.isInCart(product.id);
-          final quantity = cart.getQuantity(product.id);
 
           return Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               height: 55,
               child: isInCart
-                  ? Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              cart.decreaseQuantity(product.id);
-                            },
-                            icon: const Icon(Icons.remove, color: Colors.white),
-                          ),
-
-                          Text(
-                            quantity.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          IconButton(
-                            onPressed: () {
-                              cart.increaseQuantity(product.id);
-                            },
-                            icon: const Icon(Icons.add, color: Colors.white),
-                          ),
-                        ],
-                      ),
+                  ? ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const CartPage()),
+                        );
+                      },
+                      icon: const Icon(Icons.shopping_cart_checkout),
+                      label: const Text('Go To Cart'),
                     )
                   : ElevatedButton.icon(
                       onPressed: () async {

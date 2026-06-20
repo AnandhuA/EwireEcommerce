@@ -24,10 +24,24 @@ extension ThemeColors on BuildContext {
   Color get hitText =>
       isDarkMode ? AppColors.darkHitText : AppColors.lightHitText;
 
+  // CARD
+  Color get card => isDarkMode ? AppColors.darkCard : AppColors.lightCard;
+
+  // BORDER
+  Color get border => isDarkMode ? AppColors.darkBorder : AppColors.lightBorder;
+
+  // SHIMMER
+  Color get shimmerBase =>
+      isDarkMode ? AppColors.darkShimmerBase : AppColors.lightShimmerBase;
+
+  Color get shimmerHighlight => isDarkMode
+      ? AppColors.darkShimmerHighlight
+      : AppColors.lightShimmerHighlight;
+
   // COMMON
 
   Color get whiteText => AppColors.whiteText;
-  
+
   Color get darkText => AppColors.blackText;
 
   Color get commanHitText => AppColors.commanHitText;

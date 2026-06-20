@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ewire_ecommerce/widgets/app_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -62,10 +63,20 @@ class CartItemTile extends StatelessWidget {
             Column(
               children: [
                 IconButton(
-                  onPressed: () {
-                    context.read<CartProvider>().removeFromCart(
-                      item.product.id,
+                  onPressed: () async {
+                    final shouldDelete = await AppAlertDialog.show(
+                      context: context,
+                      title: 'Remove Item',
+                      message:
+                          'Are you sure you want to remove this item from cart?',
+                      confirmText: 'Remove',
                     );
+
+                    if (shouldDelete && context.mounted) {
+                      context.read<CartProvider>().removeFromCart(
+                        item.product.id,
+                      );
+                    }
                   },
                   icon: const Icon(Icons.delete_outline),
                 ),
