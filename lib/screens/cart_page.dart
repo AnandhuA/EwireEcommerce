@@ -1,5 +1,6 @@
 import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
+import 'package:ewire_ecommerce/screens/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,19 @@ class CartPage extends StatelessWidget {
                   itemCount: cart.cartItems.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
-                    return CartItemTile(item: cart.cartItems[index]);
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ProductDetailPage(
+                              product: cart.cartItems[index].product,
+                            ),
+                          ),
+                        );
+                      },
+                      child: CartItemTile(item: cart.cartItems[index]),
+                    );
                   },
                 ),
 

@@ -8,10 +8,7 @@ import '../providers/cart_provider.dart';
 class CartItemTile extends StatelessWidget {
   final CartItemModel item;
 
-  const CartItemTile({
-    super.key,
-    required this.item,
-  });
+  const CartItemTile({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +22,14 @@ class CartItemTile extends StatelessWidget {
               height: 80,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: CachedNetworkImage(
-                imageUrl: item.thumbnail,
-                fit: BoxFit.cover,
+              child: Hero(
+                tag: 'product_${item.product.id}',
+                child: CachedNetworkImage(
+                  imageUrl: item.product.thumbnail,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
 
@@ -38,28 +37,22 @@ class CartItemTile extends StatelessWidget {
 
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.title,
+                    item.product.title,
                     maxLines: 2,
-                    overflow:
-                        TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 8),
 
                   Text(
-                    '₹${item.price}',
+                    '₹${item.product.price}',
                     style: const TextStyle(
                       fontSize: 18,
-                      fontWeight:
-                          FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
@@ -70,42 +63,31 @@ class CartItemTile extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    context
-                        .read<CartProvider>()
-                        .removeFromCart(
-                          item.productId,
-                        );
+                    context.read<CartProvider>().removeFromCart(
+                      item.product.id,
+                    );
                   },
-                  icon: const Icon(
-                    Icons.delete_outline,
-                  ),
+                  icon: const Icon(Icons.delete_outline),
                 ),
 
                 Row(
                   children: [
                     IconButton(
                       onPressed: () {
-                        context
-                            .read<CartProvider>()
-                            .decreaseQuantity(
-                              item.productId,
-                            );
+                        context.read<CartProvider>().decreaseQuantity(
+                          item.product.id,
+                        );
                       },
-                      icon:
-                          const Icon(Icons.remove),
+                      icon: const Icon(Icons.remove),
                     ),
 
-                    Text(
-                      item.quantity.toString(),
-                    ),
+                    Text(item.quantity.toString()),
 
                     IconButton(
                       onPressed: () {
-                        context
-                            .read<CartProvider>()
-                            .increaseQuantity(
-                              item.productId,
-                            );
+                        context.read<CartProvider>().increaseQuantity(
+                          item.product.id,
+                        );
                       },
                       icon: const Icon(Icons.add),
                     ),

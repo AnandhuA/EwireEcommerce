@@ -1,4 +1,6 @@
 import 'package:ewire_ecommerce/core/themes/app_theme.dart';
+import 'package:ewire_ecommerce/core/themes/theme_provider.dart';
+import 'package:ewire_ecommerce/data/models/product_model.dart';
 import 'package:ewire_ecommerce/data/models/cart_item_model.dart';
 import 'package:ewire_ecommerce/providers/cart_provider.dart';
 import 'package:ewire_ecommerce/providers/product_provider.dart';
@@ -12,6 +14,7 @@ void main() async {
 
   await Hive.initFlutter();
 
+  Hive.registerAdapter(ProductModelAdapter());
   Hive.registerAdapter(CartItemModelAdapter());
 
   await Hive.openBox<CartItemModel>('cart');
@@ -28,14 +31,19 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
 
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: ProductListPage(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: context.watch<ThemeProvider>().themeMode,
+            home: ProductListPage(),
+          );
+        },
       ),
     );
   }

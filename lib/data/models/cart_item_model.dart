@@ -1,30 +1,19 @@
-
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'product_model.dart';
 
 part 'cart_item_model.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 1)
 class CartItemModel extends HiveObject {
   @HiveField(0)
-  int productId;
+  ProductModel product;
 
   @HiveField(1)
-  String title;
-
-  @HiveField(2)
-  String thumbnail;
-
-  @HiveField(3)
-  double price;
-
-  @HiveField(4)
   int quantity;
 
   CartItemModel({
-    required this.productId,
-    required this.title,
-    required this.thumbnail,
-    required this.price,
+    required this.product,
     this.quantity = 1,
   });
 }

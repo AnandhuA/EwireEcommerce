@@ -60,7 +60,7 @@ class ProductDetailPage extends StatelessWidget {
                   SizedBox(height: context.res.hsm),
 
                   Text(
-                    '\$${product.price}',
+                    '₹${product.price}',
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,

@@ -19,7 +19,9 @@ class CartProvider extends ChangeNotifier {
     _isCartLoading = true;
     notifyListeners();
 
-    final index = cartItems.indexWhere((item) => item.productId == product.id);
+    final index = cartItems.indexWhere(
+      (item) => item.product.id == product.id,
+    );
 
     if (index != -1) {
       final item = cartItems[index];
@@ -30,14 +32,12 @@ class CartProvider extends ChangeNotifier {
     } else {
       await _cartService.addItem(
         CartItemModel(
-          productId: product.id,
-          title: product.title,
-          thumbnail: product.thumbnail,
-          price: product.price,
+          product: product,
           quantity: 1,
         ),
       );
     }
+
     _isCartLoading = false;
     notifyListeners();
   }
@@ -47,11 +47,15 @@ class CartProvider extends ChangeNotifier {
   Future<void> removeFromCart(int productId) async {
     _isCartLoading = true;
     notifyListeners();
-    final index = cartItems.indexWhere((item) => item.productId == productId);
+
+    final index = cartItems.indexWhere(
+      (item) => item.product.id == productId,
+    );
 
     if (index != -1) {
       await _cartService.deleteItem(index);
     }
+
     _isCartLoading = false;
     notifyListeners();
   }
@@ -61,11 +65,15 @@ class CartProvider extends ChangeNotifier {
   Future<void> increaseQuantity(int productId) async {
     _isCartLoading = true;
     notifyListeners();
-    final item = cartItems.firstWhere((item) => item.productId == productId);
+
+    final item = cartItems.firstWhere(
+      (item) => item.product.id == productId,
+    );
 
     item.quantity++;
 
     await _cartService.saveItem(item);
+
     _isCartLoading = false;
     notifyListeners();
   }
@@ -75,9 +83,16 @@ class CartProvider extends ChangeNotifier {
   Future<void> decreaseQuantity(int productId) async {
     _isCartLoading = true;
     notifyListeners();
-    final index = cartItems.indexWhere((item) => item.productId == productId);
 
-    if (index == -1) return;
+    final index = cartItems.indexWhere(
+      (item) => item.product.id == productId,
+    );
+
+    if (index == -1) {
+      _isCartLoading = false;
+      notifyListeners();
+      return;
+    }
 
     final item = cartItems[index];
 
@@ -98,7 +113,9 @@ class CartProvider extends ChangeNotifier {
   Future<void> clearCart() async {
     _isCartLoading = true;
     notifyListeners();
+
     await _cartService.clearCart();
+
     _isCartLoading = false;
     notifyListeners();
   }
@@ -106,13 +123,17 @@ class CartProvider extends ChangeNotifier {
   // ===== HELPERS =====
 
   bool isInCart(int productId) {
-    return cartItems.any((item) => item.productId == productId);
+    return cartItems.any(
+      (item) => item.product.id == productId,
+    );
   }
 
   int getQuantity(int productId) {
     try {
       return cartItems
-          .firstWhere((item) => item.productId == productId)
+          .firstWhere(
+            (item) => item.product.id == productId,
+          )
           .quantity;
     } catch (_) {
       return 0;
@@ -120,11 +141,18 @@ class CartProvider extends ChangeNotifier {
   }
 
   double get totalPrice {
-    return cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+    return cartItems.fold(
+      0,
+      (sum, item) =>
+          sum + (item.product.price * item.quantity),
+    );
   }
 
   int get cartCount {
-    return cartItems.fold(0, (sum, item) => sum + item.quantity);
+    return cartItems.fold(
+      0,
+      (sum, item) => sum + item.quantity,
+    );
   }
 
   int get uniqueProductCount {
