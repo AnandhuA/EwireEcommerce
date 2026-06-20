@@ -9,7 +9,7 @@ class AppColors {
   static const Color lightHitText = Colors.grey;
 
   // Dark theme colors
-  static const Color darkPrimary = Color.fromARGB(255, 110, 19, 125);
+  static const Color darkPrimary = Color.fromARGB(255, 157, 62, 172);
   static const Color darkSecondry = Colors.deepPurple;
   static const Color darkBackground = Color.fromARGB(255, 0, 0, 0);
   static const Color darkText = Colors.white;

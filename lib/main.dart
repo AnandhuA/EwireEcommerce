@@ -1,5 +1,5 @@
 import 'package:ewire_ecommerce/core/themes/app_theme.dart';
-import 'package:ewire_ecommerce/core/themes/theme_provider.dart';
+import 'package:ewire_ecommerce/providers/theme_provider.dart';
 import 'package:ewire_ecommerce/data/models/product_model.dart';
 import 'package:ewire_ecommerce/data/models/cart_item_model.dart';
 import 'package:ewire_ecommerce/providers/cart_provider.dart';

@@ -56,18 +56,63 @@ class CartPage extends StatelessWidget {
                   itemCount: cart.cartItems.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ProductDetailPage(
-                              product: cart.cartItems[index].product,
-                            ),
-                          ),
+                    final item = cart.cartItems[index];
+
+                    return Dismissible(
+                      key: ValueKey(item.product.id),
+
+                      direction: DismissDirection.endToStart,
+
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+
+                      confirmDismiss: (_) async {
+                        return await AppAlertDialog.show(
+                          context: context,
+                          title: 'Remove Item',
+                          message:
+                              'Are you sure you want to remove this item from cart?',
+                          confirmText: 'Remove',
                         );
                       },
-                      child: CartItemTile(item: cart.cartItems[index]),
+
+                      onDismissed: (_) async {
+                        await context.read<CartProvider>().removeFromCart(
+                          item.product.id,
+                        );
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${item.product.title} removed'),
+                            ),
+                          );
+                        }
+                      },
+
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  ProductDetailPage(product: item.product),
+                            ),
+                          );
+                        },
+                        child: CartItemTile(item: item),
+                      ),
                     );
                   },
                 ),

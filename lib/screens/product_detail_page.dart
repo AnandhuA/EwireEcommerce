@@ -21,6 +21,7 @@ class ProductDetailPage extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            scrolledUnderElevation: 0,
             expandedHeight: 320,
             pinned: true,
             backgroundColor: context.card,

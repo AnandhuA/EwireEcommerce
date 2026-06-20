@@ -2,6 +2,7 @@ import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:ewire_ecommerce/providers/product_provider.dart';
 import 'package:ewire_ecommerce/widgets/app_error_widget.dart';
+import 'package:ewire_ecommerce/widgets/home_banner_slider.dart';
 import 'package:ewire_ecommerce/widgets/product_list_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,6 +78,9 @@ class _ProductListPageState extends State<ProductListPage> {
                         context.read<ProductProvider>().clearSearch();
                       },
                     ),
+
+                    SizedBox(height: context.res.hsm),
+                    const HomeBannerSlider(),
 
                     SizedBox(height: context.res.hsm),
 

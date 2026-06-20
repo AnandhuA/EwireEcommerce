@@ -1,6 +1,6 @@
 import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
-import 'package:ewire_ecommerce/core/themes/theme_provider.dart';
+import 'package:ewire_ecommerce/providers/theme_provider.dart';
 import 'package:ewire_ecommerce/providers/cart_provider.dart';
 import 'package:ewire_ecommerce/screens/cart_page.dart';
 import 'package:flutter/material.dart';

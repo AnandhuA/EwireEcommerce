@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ewire_ecommerce/widgets/app_alert_dialog.dart';
+import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +19,8 @@ class CartItemTile extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: context.res.w(0.2),
+              height: context.res.h(0.09),
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
@@ -60,49 +60,26 @@ class CartItemTile extends StatelessWidget {
               ),
             ),
 
-            Column(
+            Row(
               children: [
                 IconButton(
-                  onPressed: () async {
-                    final shouldDelete = await AppAlertDialog.show(
-                      context: context,
-                      title: 'Remove Item',
-                      message:
-                          'Are you sure you want to remove this item from cart?',
-                      confirmText: 'Remove',
+                  onPressed: () {
+                    context.read<CartProvider>().decreaseQuantity(
+                      item.product.id,
                     );
-
-                    if (shouldDelete && context.mounted) {
-                      context.read<CartProvider>().removeFromCart(
-                        item.product.id,
-                      );
-                    }
                   },
-                  icon: const Icon(Icons.delete_outline),
+                  icon: const Icon(Icons.remove),
                 ),
 
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        context.read<CartProvider>().decreaseQuantity(
-                          item.product.id,
-                        );
-                      },
-                      icon: const Icon(Icons.remove),
-                    ),
+                Text(item.quantity.toString()),
 
-                    Text(item.quantity.toString()),
-
-                    IconButton(
-                      onPressed: () {
-                        context.read<CartProvider>().increaseQuantity(
-                          item.product.id,
-                        );
-                      },
-                      icon: const Icon(Icons.add),
-                    ),
-                  ],
+                IconButton(
+                  onPressed: () {
+                    context.read<CartProvider>().increaseQuantity(
+                      item.product.id,
+                    );
+                  },
+                  icon: const Icon(Icons.add),
                 ),
               ],
             ),
