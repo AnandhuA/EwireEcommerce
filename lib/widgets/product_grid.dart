@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:ewire_ecommerce/core/themes/app_colors.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
+import 'package:ewire_ecommerce/providers/cart_provider.dart';
+import 'package:ewire_ecommerce/screens/cart_page.dart';
 import 'package:ewire_ecommerce/screens/product_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data/models/product_model.dart';
 
@@ -79,8 +83,6 @@ class _ProductCard extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 10),
-
               Text(
                 product.title,
                 maxLines: 1,
@@ -91,7 +93,7 @@ class _ProductCard extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 6),
+              SizedBox(height: context.res.hxs),
 
               Row(
                 children: [
@@ -103,15 +105,92 @@ class _ProductCard extends StatelessWidget {
                   ),
                 ],
               ),
-
-              const Spacer(),
-
-              Text(
-                '₹${product.price}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.green.withAlpha(25),
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                child: const Text(
+                  'In Stock',
+                  style: TextStyle(color: Colors.green, fontSize: 10),
+                ),
+              ),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '₹${(product.price * 1.2).toStringAsFixed(0)}',
+                          style: TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            color: context.hitText,
+                            fontSize: 12,
+                          ),
+                        ),
+
+                        Text(
+                          '₹${product.price}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Consumer<CartProvider>(
+                    builder: (context, cart, _) {
+                      final isInCart = cart.isInCart(product.id);
+
+                      return GestureDetector(
+                        onTap: () async {
+                          if (isInCart) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const CartPage(),
+                              ),
+                            );
+                          } else {
+                            await cart.addToCart(product);
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: context.primary.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                isInCart ? 'View' : 'Add',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: context.primary,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Icon(
+                                isInCart
+                                    ? Icons.open_in_new_rounded
+                                    : Icons.add_shopping_cart,
+                                color: context.primary,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

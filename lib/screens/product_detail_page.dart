@@ -51,31 +51,65 @@ class ProductDetailPage extends StatelessWidget {
 
                   SizedBox(height: context.res.hsm),
 
-               Row(
-  children: [
-    RatingStars(
-      rating: product.rating,
-    ),
+                  Row(
+                    children: [
+                      RatingStars(rating: product.rating),
 
-    const SizedBox(width: 8),
+                      const SizedBox(width: 8),
 
-    Text(
-      product.rating.toStringAsFixed(1),
-      style: const TextStyle(
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  ],
-),
+                      Text(
+                        product.rating.toStringAsFixed(1),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: context.res.hsm),
 
-                  Text(
-                    '₹${product.price}',
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: .spaceBetween,
+                    children: [
+                      Text(
+                        '₹${product.price}',
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.check_circle,
+                              size: 16,
+                              color: Colors.green,
+                            ),
+
+                            const SizedBox(width: 6),
+
+                            Text(
+                              'In Stock',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
+                  SizedBox(height: context.res.hsm),
+
+                  SizedBox(height: context.res.hsm),
 
                   SizedBox(height: context.res.hsm),
 
@@ -97,43 +131,45 @@ class ProductDetailPage extends StatelessWidget {
         ],
       ),
 
-      bottomNavigationBar: Consumer<CartProvider>(
-        builder: (context, cart, _) {
-          final isInCart = cart.isInCart(product.id);
+      bottomNavigationBar: SafeArea(
+        child: Consumer<CartProvider>(
+          builder: (context, cart, _) {
+            final isInCart = cart.isInCart(product.id);
 
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
-              height: 55,
-              child: isInCart
-                  ? ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const CartPage()),
-                        );
-                      },
-                      icon: const Icon(Icons.shopping_cart_checkout),
-                      label: const Text('Go To Cart'),
-                    )
-                  : ElevatedButton.icon(
-                      onPressed: () async {
-                        await cart.addToCart(product);
-
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${product.title} added to cart'),
-                            ),
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
+                height: 55,
+                child: isInCart
+                    ? ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const CartPage()),
                           );
-                        }
-                      },
-                      icon: const Icon(Icons.shopping_cart_outlined),
-                      label: const Text('Add To Cart'),
-                    ),
-            ),
-          );
-        },
+                        },
+                        icon: const Icon(Icons.shopping_cart_checkout),
+                        label: const Text('Go To Cart'),
+                      )
+                    : ElevatedButton.icon(
+                        onPressed: () async {
+                          await cart.addToCart(product);
+
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${product.title} added to cart'),
+                              ),
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.shopping_cart_outlined),
+                        label: const Text('Add To Cart'),
+                      ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

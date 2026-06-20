@@ -1,4 +1,5 @@
 import 'package:ewire_ecommerce/core/responsive/responsive.dart';
+import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:ewire_ecommerce/core/themes/theme_provider.dart';
 import 'package:ewire_ecommerce/providers/cart_provider.dart';
 import 'package:ewire_ecommerce/screens/cart_page.dart';
@@ -30,6 +31,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               icon: Icon(
                 themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                color: context.primary,
               ),
             );
           },
@@ -46,7 +48,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     MaterialPageRoute(builder: (_) => const CartPage()),
                   );
                 },
-                icon: const Icon(Icons.shopping_cart_outlined),
+                icon: Icon(
+                  Icons.shopping_cart_outlined,
+                  color: context.primary,
+                ),
               ),
             );
           },

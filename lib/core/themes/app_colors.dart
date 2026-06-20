@@ -26,10 +26,10 @@ class AppColors {
 
 
   static const Color lightCard = Color(0xFFF5F5F5);
-static const Color darkCard = Color(0xFF1A1A1A);
+static const Color darkCard = Color.fromARGB(255, 17, 17, 17);
 
 static const Color lightBorder = Color(0xFFE0E0E0);
-static const Color darkBorder = Color(0xFF333333);
+static const Color darkBorder = Color.fromARGB(255, 30, 30, 30);
 
 static const Color lightShimmerBase = Color(0xFFE0E0E0);
 static const Color lightShimmerHighlight = Color(0xFFF5F5F5);

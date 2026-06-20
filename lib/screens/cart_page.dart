@@ -87,15 +87,15 @@ class CartPage extends StatelessWidget {
                         '₹${cart.totalPrice.toStringAsFixed(2)}',
                       ),
 
-                      const SizedBox(height: 8),
+                      SizedBox(height: context.res.hxs),
 
                       const _PriceRow(title: 'Shipping', value: 'Free'),
 
-                      const SizedBox(height: 8),
+                      SizedBox(height: context.res.hxs),
 
                       _PriceRow(title: 'Items', value: '${cart.cartCount}'),
 
-                      const Divider(height: 24),
+                      Divider(height: context.res.hsm),
 
                       _buildPriceRow(
                         'Total',
@@ -103,7 +103,7 @@ class CartPage extends StatelessWidget {
                         isBold: true,
                       ),
 
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.res.hsm),
 
                       SizedBox(
                         width: double.infinity,
@@ -123,6 +123,7 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: context.res.hsm),
               ],
             ),
           );
