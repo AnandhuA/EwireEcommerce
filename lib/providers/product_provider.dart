@@ -1,3 +1,4 @@
+import 'package:ewire_ecommerce/data/models/product_details_model.dart';
 import 'package:flutter/material.dart';
 
 import '../core/network/api_result.dart';
@@ -17,6 +18,10 @@ class ProductProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  bool _isProductDetailsLoading = false;
+
+  bool get isProductDetailsLoading => _isProductDetailsLoading;
+
   String? get errorMessage => _errorMessage;
 
   List<ProductModel> get products => _products;
@@ -31,6 +36,10 @@ class ProductProvider extends ChangeNotifier {
 
   bool get hasNoSearchResults =>
       _searchQuery.isNotEmpty && _filteredProducts.isEmpty;
+
+  ProductDetailsModel? _productDetails;
+
+  ProductDetailsModel? get productDetails => _productDetails;
 
   //================ FETCH PRODUCTS =================
 
@@ -57,6 +66,30 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //=====FETCH PRODUCT DETAILS ========
+
+  Future<void> fetchProductDetails(int id) async {
+    _productDetails = null;
+    _isProductDetailsLoading = true;
+    _errorMessage = null;
+
+    notifyListeners();
+
+    final result = await _service.getProductDetails(id);
+
+    if (result is Success<ProductDetailsModel>) {
+      _productDetails = result.data;
+    }
+
+    if (result is Failure<ProductDetailsModel>) {
+      _errorMessage = result.message;
+    }
+
+    _isProductDetailsLoading = false;
+
+    notifyListeners();
+  }
+
   //================ SEARCH PRODUCTS =================
 
   void searchProducts(String query) {
@@ -75,6 +108,15 @@ class ProductProvider extends ChangeNotifier {
 
   //================ CLEAR SEARCH =================
 
+void clearProductDetails({
+  bool notify = true,
+}) {
+  _productDetails = null;
+
+  if (notify) {
+    notifyListeners();
+  }
+}
   void clearSearch() {
     _searchQuery = '';
     _filteredProducts = [];

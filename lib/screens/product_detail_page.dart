@@ -3,15 +3,47 @@ import 'package:ewire_ecommerce/core/responsive/responsive.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:ewire_ecommerce/data/models/product_model.dart';
 import 'package:ewire_ecommerce/providers/cart_provider.dart';
+import 'package:ewire_ecommerce/providers/product_provider.dart';
 import 'package:ewire_ecommerce/screens/cart_page.dart';
 import 'package:ewire_ecommerce/widgets/rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductDetailPage extends StatelessWidget {
+class ProductDetailPage extends StatefulWidget {
   final ProductModel product;
 
   const ProductDetailPage({super.key, required this.product});
+
+  @override
+  State<ProductDetailPage> createState() => _ProductDetailPageState();
+}
+
+class _ProductDetailPageState extends State<ProductDetailPage> {
+  late ProductProvider _productProvider;
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() async {
+      final provider = context.read<ProductProvider>();
+
+      provider.clearProductDetails();
+
+      await provider.fetchProductDetails(widget.product.id);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _productProvider = context.read<ProductProvider>();
+  }
+
+  @override
+  void dispose() {
+    _productProvider.clearProductDetails(notify: false);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +58,25 @@ class ProductDetailPage extends StatelessWidget {
             pinned: true,
             backgroundColor: context.card,
             flexibleSpace: FlexibleSpaceBar(
-              background: Hero(
-                tag: 'product_${product.id}',
-                child: CachedNetworkImage(
-                  imageUrl: product.thumbnail,
-                  fit: BoxFit.cover,
-                ),
+              background: Consumer<ProductProvider>(
+                builder: (context, provider, _) {
+                  final details = provider.productDetails;
+
+                  return Hero(
+                    tag: 'product_${widget.product.id}',
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      child: CachedNetworkImage(
+                        key: ValueKey(
+                          details?.thumbnail ?? widget.product.thumbnail,
+                        ),
+                        imageUrl:
+                            details?.thumbnail ?? widget.product.thumbnail,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -43,7 +88,7 @@ class ProductDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.title,
+                    widget.product.title,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -54,12 +99,12 @@ class ProductDetailPage extends StatelessWidget {
 
                   Row(
                     children: [
-                      RatingStars(rating: product.rating),
+                      RatingStars(rating: widget.product.rating),
 
                       const SizedBox(width: 8),
 
                       Text(
-                        product.rating.toStringAsFixed(1),
+                        widget.product.rating.toStringAsFixed(1),
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -70,7 +115,7 @@ class ProductDetailPage extends StatelessWidget {
                     mainAxisAlignment: .spaceBetween,
                     children: [
                       Text(
-                        '₹${product.price}',
+                        '₹${widget.product.price}',
                         style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
@@ -118,13 +163,55 @@ class ProductDetailPage extends StatelessWidget {
                     'Description',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
-
                   SizedBox(height: context.res.hsm),
 
                   Text(
-                    product.description,
+                    widget.product.description,
                     style: const TextStyle(height: 1.5),
                   ),
+                  Consumer<ProductProvider>(
+                    builder: (context, provider, _) {
+                      final details = provider.productDetails;
+
+                      if (details == null) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return AnimatedOpacity(
+                        opacity: 1,
+                        duration: const Duration(milliseconds: 400),
+                        child: Column(
+                          children: [
+                            SizedBox(height: context.res.hsm),
+
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: context.card,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                children: [
+                                  _infoRow('Brand', details.brand),
+                                  _infoRow('Category', details.category),
+                                  _infoRow('Stock', '${details.stock}'),
+                                  _infoRow(
+                                    'Warranty',
+                                    details.warrantyInformation,
+                                  ),
+                                  _infoRow(
+                                    'Shipping',
+                                    details.shippingInformation,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: context.res.hsm),
                 ],
               ),
             ),
@@ -135,8 +222,28 @@ class ProductDetailPage extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: _AnimatedCartButton(product: product),
+          child: _AnimatedCartButton(product: widget.product),
         ),
+      ),
+    );
+  }
+
+  Widget _infoRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
     );
   }
