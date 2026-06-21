@@ -166,7 +166,12 @@ class _AnimatedCartButtonState extends State<_AnimatedCartButton>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cart = context.read<CartProvider>();
+      if (cart.isInCart(widget.product.id)) {
+        _controller.value = 1.0; // jump to end state instantly
+      }
+    });
     // "Add to Cart" slides OUT to the right and fades out
     _slideOut = Tween<Offset>(begin: Offset.zero, end: const Offset(1.5, 0))
         .animate(
