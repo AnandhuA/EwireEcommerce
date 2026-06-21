@@ -92,75 +92,77 @@ class CartPage extends StatelessWidget {
             );
           }
 
-          return SingleChildScrollView(
+          return Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: cart.cartItems.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final item = cart.cartItems[index];
+                Expanded(
+                  child: ListView.separated(
+                    // shrinkWrap: true,
+                    // physics: const NeverScrollableScrollPhysics(),
+                    itemCount: cart.cartItems.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final item = cart.cartItems[index];
 
-                    return Dismissible(
-                      key: ValueKey(item.product.id),
+                      return Dismissible(
+                        key: ValueKey(item.product.id),
 
-                      direction: DismissDirection.endToStart,
+                        direction: DismissDirection.endToStart,
 
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(16),
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.white,
+                            size: 28,
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      ),
 
-                      confirmDismiss: (_) async {
-                        return await AppAlertDialog.show(
-                          context: context,
-                          title: 'Remove Item',
-                          message:
-                              'Are you sure you want to remove this item from cart?',
-                          confirmText: 'Remove',
-                        );
-                      },
-
-                      onDismissed: (_) async {
-                        await context.read<CartProvider>().removeFromCart(
-                          item.product.id,
-                        );
-
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${item.product.title} removed'),
-                            ),
-                          );
-                        }
-                      },
-
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ProductDetailPage(product: item.product),
-                            ),
+                        confirmDismiss: (_) async {
+                          return await AppAlertDialog.show(
+                            context: context,
+                            title: 'Remove Item',
+                            message:
+                                'Are you sure you want to remove this item from cart?',
+                            confirmText: 'Remove',
                           );
                         },
-                        child: CartItemTile(item: item),
-                      ),
-                    );
-                  },
+
+                        onDismissed: (_) async {
+                          await context.read<CartProvider>().removeFromCart(
+                            item.product.id,
+                          );
+
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${item.product.title} removed'),
+                              ),
+                            );
+                          }
+                        },
+
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProductDetailPage(product: item.product),
+                              ),
+                            );
+                          },
+                          child: CartItemTile(item: item),
+                        ),
+                      );
+                    },
+                  ),
                 ),
 
                 SizedBox(height: context.res.hsm),
@@ -173,7 +175,7 @@ class CartPage extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      _buildPriceRow(
+                      _buildAnimatedPriceRow(
                         'Subtotal',
                         '₹${cart.totalPrice.toStringAsFixed(2)}',
                       ),
@@ -188,7 +190,7 @@ class CartPage extends StatelessWidget {
 
                       Divider(height: context.res.hsm),
 
-                      _buildPriceRow(
+                      _buildAnimatedPriceRow(
                         'Total',
                         '₹${cart.totalPrice.toStringAsFixed(2)}',
                         isBold: true,
@@ -224,7 +226,11 @@ class CartPage extends StatelessWidget {
   }
 }
 
-Widget _buildPriceRow(String title, String value, {bool isBold = false}) {
+Widget _buildAnimatedPriceRow(
+  String title,
+  String value, {
+  bool isBold = false,
+}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -234,10 +240,27 @@ Widget _buildPriceRow(String title, String value, {bool isBold = false}) {
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      Text(
-        value,
-        style: TextStyle(
-          fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+
+      AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.3),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: Text(
+          value,
+          key: ValueKey(value),
+          style: TextStyle(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          ),
         ),
       ),
     ],
@@ -254,7 +277,17 @@ class _PriceRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Text(title), Text(value)],
+      children: [
+        Text(title),
+
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) {
+            return ScaleTransition(scale: animation, child: child);
+          },
+          child: Text(value, key: ValueKey(value)),
+        ),
+      ],
     );
   }
 }

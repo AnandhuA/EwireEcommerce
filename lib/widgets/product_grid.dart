@@ -93,7 +93,7 @@ class _ProductCard extends StatelessWidget {
                   ),
                 ),
               ),
-
+              SizedBox(height: context.res.hxs),
               Text(
                 product.title,
                 maxLines: 1,
@@ -105,7 +105,6 @@ class _ProductCard extends StatelessWidget {
               ),
 
               SizedBox(height: context.res.hxs),
-
               Row(
                 children: [
                   Icon(Icons.star, size: 16, color: AppColors.ratingStar),
@@ -114,20 +113,24 @@ class _ProductCard extends StatelessWidget {
                     product.rating.toStringAsFixed(1),
                     style: const TextStyle(fontSize: 12),
                   ),
+                  Spacer(),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(
+                  //     horizontal: 6,
+                  //     vertical: 2,
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.green.withAlpha(25),
+                  //     borderRadius: BorderRadius.circular(12),
+                  //   ),
+                  //   child: const Text(
+                  //     'In Stock',
+                  //     style: TextStyle(color: Colors.green, fontSize: 10),
+                  //   ),
+                  // ),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.green.withAlpha(25),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'In Stock',
-                  style: TextStyle(color: Colors.green, fontSize: 10),
-                ),
-              ),
-
+              SizedBox(height: context.res.hxs),
               Row(
                 children: [
                   Expanded(

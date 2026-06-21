@@ -22,16 +22,4 @@ class ProductService {
       return Failure('Something went wrong');
     }
   }
-
-  Future<ApiResult<ProductModel>> getProductDetails(int id) async {
-    try {
-      final response = await dio.get(ApiUrls.productDetails(id));
-
-      return Success(ProductModel.fromJson(response.data));
-    } on DioException catch (e) {
-      return Failure(ApiException.handle(e));
-    } catch (_) {
-      return Failure('Something went wrong');
-    }
-  }
 }
