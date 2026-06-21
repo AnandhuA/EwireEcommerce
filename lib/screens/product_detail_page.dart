@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ewire_ecommerce/core/responsive/responsive.dart';
+import 'package:ewire_ecommerce/core/themes/app_colors.dart';
 import 'package:ewire_ecommerce/core/themes/theme_extensions.dart';
 import 'package:ewire_ecommerce/data/models/product_model.dart';
 import 'package:ewire_ecommerce/providers/cart_provider.dart';
@@ -20,6 +21,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   late ProductProvider _productProvider;
+
   @override
   void initState() {
     super.initState();
@@ -111,53 +113,85 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   SizedBox(height: context.res.hsm),
 
-                  Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Text(
-                        '₹${widget.product.price}',
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              size: 16,
-                              color: Colors.green,
-                            ),
+                  Consumer<ProductProvider>(
+                    builder: (context, provider, _) {
+                      final details = provider.productDetails;
 
-                            const SizedBox(width: 6),
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    '₹${widget.product.price}',
+                                    style: const TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
 
-                            Text(
-                              'In Stock',
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
+                                  if (details != null) ...[
+                                    const SizedBox(width: 8),
+
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.withValues(alpha: .1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        '${details.discountPercentage.toStringAsFixed(0)}% OFF',
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+
+                              if (details != null)
+                                Text(
+                                  '₹${(widget.product.price / (1 - details.discountPercentage / 100)).toStringAsFixed(0)}',
+                                  style: TextStyle(
+                                    decoration: TextDecoration.lineThrough,
+                                    color: context.hitText,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          if (details != null)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                '${details.stock} Stock',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   ),
-                  SizedBox(height: context.res.hsm),
 
-                  SizedBox(height: context.res.hsm),
-
-                  SizedBox(height: context.res.hsm),
+                  SizedBox(height: context.res.hmd),
 
                   const Text(
                     'Description',
@@ -212,6 +246,113 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     },
                   ),
                   SizedBox(height: context.res.hsm),
+                  Consumer<ProductProvider>(
+                    builder: (context, provider, _) {
+                      final details = provider.productDetails;
+
+                      if (details == null || details.reviews.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: context.card,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  details.rating.toStringAsFixed(1),
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+
+                                const SizedBox(width: 12),
+
+                                RatingStars(rating: details.rating),
+
+                                const Spacer(),
+
+                                Text('${details.reviews.length} Reviews'),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: context.res.hsm),
+
+                          const Text(
+                            'Customer Reviews',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          SizedBox(height: context.res.hsm),
+
+                          ...details.reviews.map(
+                            (review) => Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: context.card,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 18,
+                                        child: Text(review.reviewerName[0]),
+                                      ),
+
+                                      const SizedBox(width: 10),
+
+                                      Expanded(
+                                        child: Text(
+                                          review.reviewerName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+
+                                      Row(
+                                        children: List.generate(
+                                          5,
+                                          (index) => Icon(
+                                            index < review.rating
+                                                ? Icons.star
+                                                : Icons.star_border,
+                                            size: 16,
+                                            color: AppColors.ratingStar,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 10),
+
+                                  Text(
+                                    review.comment,
+                                    style: TextStyle(color: context.hitText),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
