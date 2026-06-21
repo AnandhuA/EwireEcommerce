@@ -1,17 +1,35 @@
-# ewire_ecommerce
+# Ewire Ecommerce
 
-A new Flutter project.
+Flutter E-commerce Application
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Product Listing
+- Product Details
+- Search Products
+- Add to Cart
+- Cart Persistence using Hive
+- Swipe to Delete Cart Items
+- Dark / Light Theme
+- Pull to Refresh
+- Shimmer Loading
+- Product Reviews
+- Responsive UI
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Flutter
+- Provider
+- Dio
+- Hive
+- Cached Network Image
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Setup
+
+1. Clone repository
+2. Run flutter pub get
+3. Run flutter run
+
+## APK
+
+APK available in GitHub Releases.
